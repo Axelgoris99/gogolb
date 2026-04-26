@@ -1,12 +1,14 @@
 ---
-title: Why Dragons Make Terrible Roommates - A Survivor's Guide
-date: 2025-11-22
-excerpt: From hoard-related space issues to fire hazards and unexpected princess visitors, discover the challenges of sharing living quarters with the world's most majestic and inconsiderate mythical creatures.
+title: Deep dive into my homelab
+date: 2026-06-01
+excerpt: I have evolved my homelab to a reasonable size over the years and instead of keeping it all to myself, I thought I could share it all with you.
 image: /images/image7.png
-tags: [dragons, roommates, survival guide, humor, fantasy]
+tags: [proxmox, docker, lxc]
 ---
 
 The housing market being what it is these days, many of us have been forced to consider alternative living arrangements. Some brave souls—whether driven by financial necessity or a misplaced sense of adventure—have even ventured into the treacherous territory of dragon cohabitation. As a three-time survivor of such arrangements (and yes, the burn scars are real), I feel uniquely qualified to warn others about the perils of sharing your living space with these magnificent but problematic mythical beasts.
+![A dragon next to a utility meter](/images/image12.png)
+
 
 ## Hoarding: More Than Just a Hobby
 
