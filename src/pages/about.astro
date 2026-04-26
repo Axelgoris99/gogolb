@@ -1,0 +1,38 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="About">
+  <div class="max-w-3xl mx-auto">
+    <header class="mb-12 text-center" transition:animate="fade">
+      <h1 class="text-5xl mb-4">About</h1>
+      <p class="text-xl text-muted-foreground mb-6">
+        I'm Axel Goris; thanks for wanting to know more!
+      </p>
+
+      <a
+        href="https://goris.live"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 px-4 py-2 rounded-md border
+      border-border hover:bg-accent transition-colors"
+      >
+        Visit my portfolio →
+      </a>
+    </header>
+
+    <div
+      class="prose prose-lg dark:prose-invert max-w-none"
+      transition:animate="fade"
+    >
+      <h2>Who am I?</h2>
+      <p>
+        I'm a fullstack software engineer (i.e IT Manager, DevOps, Frontend,
+        backend). I own the hardware, run Proxmox on it, run LXCs, self-host as
+        much as I can, build CI-CD pipeline on Gitea, build the frontend (React,
+        Angular, Godot), build the backend (C#, Python, Go, Rust, Godot) and
+        then come here to brag about it.
+      </p>
+    </div>
+  </div>
+</BaseLayout>
