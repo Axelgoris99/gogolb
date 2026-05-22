@@ -8,7 +8,12 @@ tags: [homelab, self-host]
 
 ## Starting small
 
-You can just run an app as exe on windows and have it run on your current pc. That works. Go on, check it out.
+You can just run an app as exe on windows and have it run on your current pc. That works. Go on, check it out, something like Plex takes 5 minutes to setup. If you are unsure, try it. You're not going to break anything, I promise. On linux, even simpler, you can install it from most major package manager. 
+
+Once the application is running, try to connect to it from the same device. Most of these apps work by simply opening a port and making some content accessible. So if I run plex on windows, it will probably tell me to go to localhost:port and boum, you can access it. That's your very first self hosted app, congrats!
+From there, you can try to access it from another device in the network. Grab the ip adress of the device running the application (ipconfig on windows, ip -a on linux, check the ipv4, that's what is mostly used currently). Once that's done, on another device on the same network (same wifi for now), try to access http://ip:port in a browser. Congrats! You just accessed your new service from another device.
+
+From now on, everything is going to work roughly like that. One way or another, it starts with an app opens a port and you get access to said ip and port. We'll see later how to make accessing said Ip and port nicer, but even with that, it still relies on that foundation. We just add "mappings" on top, saying "hey, goris.live points to 192.168.1.12 and when 192.168.1.12 receives a request with goris.live as the name, it redirects to 192.168.48.95:8061".
 
 ## Independant material
 
