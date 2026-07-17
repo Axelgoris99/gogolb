@@ -1,6 +1,6 @@
 ---
 title: Homelab Evolution
-date: 2026-06-01
+date: 2026-07-17
 excerpt: How my homelab started, how it grew and where I want to take it next.
 image: /images/image7.png
 tags: [homelab, self-host]
@@ -15,21 +15,28 @@ From there, you can try to access it from another device in the network. Grab th
 
 From now on, everything is going to work roughly like that. One way or another, it starts with an app opens a port and you get access to said ip and port. We'll see later how to make accessing said Ip and port nicer, but even with that, it still relies on that foundation. We just add "mappings" on top, saying "hey, goris.live points to 192.168.1.12 and when 192.168.1.12 receives a request with goris.live as the name, it redirects to 192.168.48.95:8061".
 
+Alright, on said PC, you can run as many services as you like, as long as they have different ports. Say you want to watch your media content using Plex and also have a service to store your cherished photos like Immich. You just have to start the Plex Server and the Immich Server, let's say on port 8081 and 8082 and you will be able to access them at localhost:8081 and localhost:8082. That's the basic idea.
+
 ## Independant material
 
-Then you can move that to a dedicated pc. Then you can start having multiple ones. And then you have to move them. So you realize that docker was the right way all along.
+That's cool and all but obviously we are now using our computer and if we turn it down, we'll lose the access to our servers. It is now time to move all of that stuff to a dedicated pc. At this stage, mostly anything will do for testing but if you start getting serious about photo storing or such, I'd recommend checking the specs. Each of the service you want will consume a little bit of power and you need to figure out if you need all of the services at the same time, all the time and such. Power is another interesting part because we'll be letting a PC run 24/7 so that will impact your electricity bill. Tho, a PC is just a useful heater.
+
+Then you can start having multiple ones. And then you have to move them. And that's when the pain hits reaaaaaally hard. You have to redo all of your config, find all of your exe or service again, restart, replan all of it. And to help with that, you realize that docker (or LXC) was the right way all along.
 
 ## Distant access
 
-Then you go on holiday. You want to be able to access all your series or movies, so you look into how to do that. You go down the rabbit hole, going from vpn to opening port (no, dont do that), realizing that you need a dynamic dns, thinking that you already have a VPS with a domain name and might as well use that. so you slap ddns-updater to have an ip always pointing at your wireguard vpn ip. and boum, on holiday with all your favorites services!
+Then you go on holiday. You want to be able to access all your series or movies, so you look into how to do that. You go down the rabbit hole, going from vpn to opening port (no, dont do that), realizing that you need a dynamic dns, thinking that you already have a VPS with a domain name and might as well use that. So you slap ddns-updater to have an ip always pointing at your wireguard vpn ip. And boum, on holiday with all your favorites services!
+
+Okay, I might have skipped a few steps here. Recommendation: go simple. All you need is wireguard, that's a simple server/client that will allow all of the traffic from one of your device to go through the other device so much so that it looks like you are on the other network. That's a VPN in a nutshell.
 
 ## Industrialization
 
-Then you acquire another pc. And you realize, "Hey, would it not be cool to be rid of google photo and have unlimited storage? But I'd need backup..." so you slap proxmox on one pc, on a second one, put them in a cluster. 
+Then you acquire another pc. And you realize: "Wait a second, I cannot keep on doing stuff manually..."
+That's when you should look into solutions like Proxmox which allows you to manage a bunch of PC and start multiple VMs or LinuxContainer on the same pc.
 Then you start browsing helper script page and you install a whole lot of stuff you don't need just because you can.
-With that much stuff, you realize that ProxMox interface is not really cool to have a quick glance. So you start looking into monitoring tools and end up with Pulse. 
+With that much stuff, you realize that Proxmox interface is not really cool to have a quick glance. So you start looking into monitoring tools and end up with stuff like Pulse. 
 Then you start having too many things. So you look into a homepage to centralize all of them.
-And so on and so forth...
+And so on and so forth...Welcome to the self-hosting journey my friend!
 
 I present to you, your new best friend:
 https://community-scripts.org/
