@@ -27,3 +27,6 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# direnv / nix dev shell cache
+.direnv/

@@ -7,12 +7,13 @@ same navigation, theme toggle and skin picker. The blog starts on the **minimal*
 
 ## Commands
 
-No global Node on my machine, so everything runs through Nix:
+Node comes from the Nix dev shell (`flake.nix`); with direnv it loads when you `cd` in
+(run `direnv allow` once), otherwise use `nix develop`.
 
 ```bash
-nix shell nixpkgs#nodejs_22 -c npm run dev      # localhost:4321, drafts included
-nix shell nixpkgs#nodejs_22 -c npm run build    # type-check + build to dist/
-nix shell nixpkgs#nodejs_22 -c ./deploy.sh      # build + rsync dist/ to the OVH VPS
+npm run dev      # localhost:4321, drafts included
+npm run build    # type-check + build to dist/
+./deploy.sh      # build + rsync dist/ to the OVH VPS
 ```
 
 ## Writing
