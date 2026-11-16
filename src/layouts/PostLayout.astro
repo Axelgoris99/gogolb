@@ -17,6 +17,7 @@ interface Props {
     date: Date;
     excerpt: string;
     image?: string;
+    imageAlt?: string;
     tags: string[];
   };
   newer: NavPost | null;
@@ -24,7 +25,7 @@ interface Props {
 }
 
 const { frontmatter, newer, older } = Astro.props;
-const { title, date, excerpt, image, tags } = frontmatter;
+const { title, date, excerpt, image, imageAlt = "", tags } = frontmatter;
 
 // Estimated reading time
 const WORDS_PER_MINUTE = 225;
@@ -56,7 +57,7 @@ const readingTime = Math.max(1, Math.ceil(wordCount / WORDS_PER_MINUTE));
         </div>
       </header>
       <main class="wrapper stack gap-10">
-        {image && <img class="feature-image" src={image} alt="" loading="eager" />}
+        {image && <img class="feature-image" src={image} alt={imageAlt} loading="eager" />}
         <div class="entry-content">
           <slot />
         </div>
@@ -132,8 +133,6 @@ const readingTime = Math.max(1, Math.ceil(wordCount / WORDS_PER_MINUTE));
     width: 100%;
     max-width: 68ch;
     margin-inline: auto;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
     border-radius: var(--radius-lg);
     border: var(--line);
   }

@@ -9,6 +9,7 @@ const postsCollection = defineCollection({
     date: z.date(),
     excerpt: z.string(),
     image: z.string().optional(),
+    imageAlt: z.string().optional(),
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
   }),

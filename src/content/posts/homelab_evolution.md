@@ -2,7 +2,8 @@
 title: Homelab Evolution
 date: 2026-07-17
 excerpt: How my homelab started, how it grew and where I want to take it next.
-image: /images/image7.png
+image: /images/homelab-infra.png
+imageAlt: "Diagram of my homelab today: a cloud VPS for websites and apps, a home lab with two Proxmox servers (media, photos, smart home) and a remote site with game servers, linked to each other and to my devices by WireGuard."
 tags: [homelab, self-host]
 ---
 
