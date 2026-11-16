@@ -1,0 +1,60 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+type Props = HTMLAttributes<"a"> & { href: string };
+
+const { href, ...attrs } = Astro.props;
+---
+
+<a class="cta" href={href} {...attrs}><slot /></a>
+
+<style>
+  a {
+    position: relative;
+    display: flex;
+    place-content: center;
+    text-align: center;
+    padding: 0.56em 2em;
+    gap: 0.8em;
+    color: var(--cta-fg);
+    text-decoration: none;
+    line-height: 1.1;
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+    background: var(--cta-bg);
+    box-shadow: var(--shadow-md);
+    white-space: nowrap;
+    transition:
+      transform var(--ui-transition),
+      box-shadow var(--ui-transition),
+      background var(--ui-transition);
+  }
+
+  @media (min-width: 20em) {
+    a {
+      font-size: var(--text-lg);
+    }
+  }
+
+  /* Overlay for hover effects. */
+  a::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    transition: background-color var(--ui-transition);
+    mix-blend-mode: overlay;
+  }
+
+  a:focus::after,
+  a:hover::after {
+    background-color: var(--cta-hover-overlay);
+  }
+
+  @media (min-width: 50em) {
+    a {
+      padding: 1.125rem 2.5rem;
+      font-size: var(--text-xl);
+    }
+  }
+</style>

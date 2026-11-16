@@ -6,35 +6,20 @@ import PostLayout from '../../layouts/PostLayout.astro';
 // Generate static paths for all posts
 export async function getStaticPaths() {
   const sortedPosts = await getPublishedPosts();
+  const link = (post?: (typeof sortedPosts)[number]) =>
+    post ? { url: `/posts/${post.id}/`, title: post.data.title } : null;
 
-  return sortedPosts.map((entry, index) => {
-    // Bestimme vorherigen und nächsten Post
-    const prevPost = sortedPosts[index - 1]
-      ? {
-          url: `/posts/${sortedPosts[index - 1].id}`,
-          title: sortedPosts[index - 1].data.title
-        }
-      : null;
-
-    const nextPost = sortedPosts[index + 1]
-      ? {
-          url: `/posts/${sortedPosts[index + 1].id}`,
-          title: sortedPosts[index + 1].data.title
-        }
-      : null;
-
-    return {
-      params: { slug: entry.id },
-      props: { entry, prevPost, nextPost },
-    };
-  });
+  // Newest first, so the newer post comes before this one.
+  return sortedPosts.map((entry, index) => ({
+    params: { slug: entry.id },
+    props: { entry, newer: link(sortedPosts[index - 1]), older: link(sortedPosts[index + 1]) },
+  }));
 }
 
-// Get the post and navigation data for this page
-const { entry, prevPost, nextPost } = Astro.props;
+const { entry, newer, older } = Astro.props;
 const { Content } = await render(entry);
 ---
 
-<PostLayout frontmatter={entry.data} prevPost={prevPost} nextPost={nextPost}>
+<PostLayout frontmatter={entry.data} newer={newer} older={older}>
   <Content />
 </PostLayout>

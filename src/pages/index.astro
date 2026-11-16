@@ -1,50 +1,183 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import PostList from "../components/PostList.astro";
+import CallToAction from "../components/CallToAction.astro";
+import Grid from "../components/Grid.astro";
+import Hero from "../components/Hero.astro";
+import Icon from "../components/Icon.astro";
+import Pill from "../components/Pill.astro";
+import PostCard from "../components/PostCard.astro";
 import { getPublishedPosts } from "../utils/posts";
 
-const sortedPosts = await getPublishedPosts();
-
-// Show up to 5 posts on the frontpage
-const posts = sortedPosts.slice(0, 5).map((post) => ({
-  ...post,
-  url: `/posts/${post.id}`,
-  frontmatter: post.data,
-}));
+const allPosts = await getPublishedPosts();
+// Show up to 6 posts on the frontpage
+const posts = allPosts.slice(0, 6);
+// Tags, most used first
+const tagCounts = new Map<string, number>();
+for (const tag of allPosts.flatMap((post) => post.data.tags)) {
+  tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+}
+const tags = [...tagCounts.keys()].sort((a, b) => tagCounts.get(b)! - tagCounts.get(a)!);
 ---
 
 <BaseLayout title="Homelab & self-hosting notes">
-  <div class="max-w-4xl mx-auto">
-    <section class="text-center py-[8vh]" transition:animate="fade">
-      <h1 class="text-7xl mb-8 font-bold">Welcome to GoGolb !</h1>
-      <p class="text-2xl text-muted-foreground max-w-3xl mx-auto mb-6">
-        Hey. Welcome to my blog where I'll try to hit the right balance between
-        technical and interesting.
-      </p>
-      <p class="text-muted-foreground">
-        I do not intend to be exhaustive. There might be technical deep dive,
-        high-level overview, get started, tutorials, etc. It will depend on my
-        mood and what attracts most people!
-      </p>
-    </section>
-
-    <section class="mx-auto" transition:animate="fade">
-      <PostList
-        posts={posts}
-        showImages={false}
-        showExcerpt={false}
-        showSeparators={true}
-        showTags={false}
-      />
-
-      <div class="text-center mt-24">
-        <a
-          href="/journal"
-          class="text-lg font-medium text-black dark:text-white py-2 px-4 rounded-md inline-block focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 hover:underline"
+  <div class="stack gap-20 lg:gap-48">
+    <div class="wrapper stack gap-8 lg:gap-20">
+      <header class="home-hero">
+        <Hero
+          title="Welcome to GoGolb!"
+          tagline="Hey. Welcome to my blog where I'll try to hit the right balance between technical and interesting."
+          align="start"
         >
-          View All Posts <span aria-hidden="true">→</span>
-        </a>
-      </div>
-    </section>
+          <p class="intro">
+            I do not intend to be exhaustive. There might be technical deep dive,
+            high-level overview, get started, tutorials, etc. It will depend on my
+            mood and what attracts most people!
+          </p>
+          <div class="roles">
+            {tags.map((tag) => <Pill href={`/tags/${tag}/`}>#{tag}</Pill>)}
+          </div>
+        </Hero>
+      </header>
+    </div>
+
+    <main class="wrapper stack gap-20 lg:gap-48">
+      <section class="section with-background with-cta">
+        <header class="section-header stack gap-2 lg:gap-4">
+          <h3>Latest posts</h3>
+          <p>The most recent posts.</p>
+        </header>
+
+        <div class="gallery">
+          <Grid>
+            {
+              posts.map((post) => (
+                <li>
+                  <PostCard post={post} />
+                </li>
+              ))
+            }
+          </Grid>
+        </div>
+
+        <div class="section-cta">
+          <CallToAction href="/journal/">
+            View All
+            <Icon icon="arrow-right" size="1.2em" />
+          </CallToAction>
+        </div>
+      </section>
+    </main>
   </div>
 </BaseLayout>
+
+<style>
+  .home-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .intro {
+    max-width: 60ch;
+    font-size: var(--text-md);
+    color: var(--gray-300);
+  }
+
+  .roles {
+    margin-top: 0.5rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+  }
+
+  @media (min-width: 50em) {
+    .home-hero {
+      padding-inline: 2.5rem;
+      align-items: flex-start;
+    }
+
+    .roles {
+      justify-content: flex-start;
+    }
+  }
+
+  /* ====================================================== */
+
+  .section {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .with-background {
+    position: relative;
+  }
+
+  .with-background::before {
+    --hero-bg: var(--bg-image-subtle-2);
+
+    content: "";
+    position: absolute;
+    pointer-events: none;
+    left: 50%;
+    width: 100vw;
+    aspect-ratio: calc(2.25 / var(--bg-scale));
+    top: 0;
+    transform: translateY(-75%) translateX(-50%);
+    background:
+      url("/assets/backgrounds/noise.webp") top center/220px repeat,
+      var(--hero-bg) center center / var(--bg-gradient-size) no-repeat,
+      var(--gray-999);
+    background-blend-mode: overlay, normal, normal, normal;
+    mix-blend-mode: var(--bg-blend-mode);
+    z-index: -1;
+  }
+
+  .section-header {
+    justify-self: center;
+    text-align: center;
+    max-width: 50ch;
+    font-size: var(--text-md);
+    color: var(--gray-300);
+  }
+
+  .section-header h3 {
+    font-size: var(--text-2xl);
+  }
+
+  @media (min-width: 50em) {
+    .section {
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-areas: "header header header header" "gallery gallery gallery gallery";
+      gap: 5rem;
+    }
+
+    .section.with-cta {
+      grid-template-areas: "header header header cta" "gallery gallery gallery gallery";
+    }
+
+    .section-header {
+      grid-area: header;
+      font-size: var(--text-lg);
+    }
+
+    .section-header h3 {
+      font-size: var(--text-4xl);
+    }
+
+    .with-cta .section-header {
+      justify-self: flex-start;
+      text-align: left;
+    }
+
+    .gallery {
+      grid-area: gallery;
+    }
+
+    .section-cta {
+      grid-area: cta;
+    }
+  }
+</style>

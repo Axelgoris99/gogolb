@@ -1,30 +1,21 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import CallToAction from "../components/CallToAction.astro";
+import Hero from "../components/Hero.astro";
+import Icon from "../components/Icon.astro";
 ---
 
-<BaseLayout title="About" description="Who writes GoGolb: Axel Goris, fullstack engineer who runs his own Proxmox homelab, VPS and NixOS laptop.">
-  <div class="max-w-3xl mx-auto">
-    <header class="mb-12 text-center" transition:animate="fade">
-      <h1 class="text-5xl mb-4">About</h1>
-      <p class="text-xl text-muted-foreground mb-6">
-        I'm Axel Goris; thanks for wanting to know more!
-      </p>
-
-      <a
-        href="https://goris.live"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center gap-2 px-4 py-2 rounded-md border
-      border-border hover:bg-accent transition-colors"
-      >
-        Visit my portfolio →
-      </a>
-    </header>
-
-    <div
-      class="prose prose-lg dark:prose-invert max-w-none"
-      transition:animate="fade"
-    >
+<BaseLayout
+  title="About"
+  description="Who writes GoGolb: Axel Goris, fullstack engineer who runs his own Proxmox homelab, VPS and NixOS laptop."
+>
+  <main class="wrapper stack gap-10">
+    <Hero
+      title="About"
+      tagline="I'm Axel Goris; thanks for wanting to know more!"
+      align="start"
+    />
+    <div class="entry-content">
       <h2>Who am I?</h2>
       <p>
         I'm a fullstack software engineer (i.e IT Manager, DevOps, Frontend,
@@ -34,5 +25,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         then come here to brag about it.
       </p>
     </div>
-  </div>
+    <div class="portfolio">
+      <CallToAction href="https://goris.live">
+        Visit my portfolio
+        <Icon icon="arrow-right" size="1.2em" />
+      </CallToAction>
+    </div>
+  </main>
 </BaseLayout>
+
+<style>
+  .portfolio {
+    display: flex;
+    justify-content: center;
+  }
+</style>

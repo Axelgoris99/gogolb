@@ -1,77 +1,170 @@
 ---
-import BaseLayout from './BaseLayout.astro';
-import PostNavigation from '../components/PostNavigation.astro';
-import { formatDate } from '../utils/date';
-import { optimizeImagePath } from '../utils/optimizeImagePath';
+// A post, laid out like the portfolio's entry pages.
+import BaseLayout from "./BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+import Icon from "../components/Icon.astro";
+import Pill from "../components/Pill.astro";
+import { formatDate } from "../utils/date";
 
-const { frontmatter, headings, prevPost, nextPost } = Astro.props;
-const { title, date, tags, image, excerpt } = frontmatter;
-const slug = Astro.url.pathname.split('/').filter(Boolean).pop();
+interface NavPost {
+  url: string;
+  title: string;
+}
 
-// Ensure image path is optimized
-const optimizedImagePath = image ? optimizeImagePath(image) : null;
+interface Props {
+  frontmatter: {
+    title: string;
+    date: Date;
+    excerpt: string;
+    image?: string;
+    tags: string[];
+  };
+  newer: NavPost | null;
+  older: NavPost | null;
+}
+
+const { frontmatter, newer, older } = Astro.props;
+const { title, date, excerpt, image, tags } = frontmatter;
 
 // Estimated reading time
 const WORDS_PER_MINUTE = 225;
-const content = await Astro.slots.render('default');
-const contentText = content.replace(/<\/?[^>]+(>|$)/g, ' ');
-const wordCount = contentText.split(/\s+/).length;
+const content = await Astro.slots.render("default");
+const wordCount = content.replace(/<\/?[^>]+(>|$)/g, " ").split(/\s+/).length;
 const readingTime = Math.max(1, Math.ceil(wordCount / WORDS_PER_MINUTE));
-
-// Structured data for SEO
-const publishDate = new Date(date);
 ---
 
-<BaseLayout
-  title={title}
-  description={excerpt}
-  image={optimizedImagePath || image}
-  type="article"
-  publishedDate={publishDate}
->
-  <article id="main-content">
-    <header class="max-w-3xl mx-auto mb-10">
-      <div class="text-gray-500 text-sm mb-2">
-        <time datetime={publishDate.toISOString()}>{formatDate(date)}</time> • <span aria-label={`${readingTime} minute read`}>{readingTime} min read</span>
-      </div>
-      <h1 class="text-5xl mb-6" transition:name={`title-${slug}`}>{title}</h1>
-      {excerpt && <p class="text-xl text-gray-500">{excerpt}</p>}
-
-      {tags && tags.length > 0 && (
-        <div class="mt-4 mb-4 flex flex-wrap gap-2" aria-label="Tags">
-          {tags.map((tag) => (
-            <a
-              href={`/tags/${tag}`}
-              class="tag"
-              aria-label={`View all posts tagged ${tag}`}
-            >
-              {tag}
-            </a>
-          ))}
+<BaseLayout title={title} description={excerpt} image={image} type="article" publishedDate={date}>
+  <div class="stack gap-20">
+    <article class="stack gap-15">
+      <header class="entry-header">
+        <div class="wrapper stack gap-2">
+          <a class="back-link" href="/journal/"><Icon icon="arrow-left" /> Journal</a>
+          <Hero title={title} align="start">
+            <div class="details">
+              <div class="tags">
+                {tags.map((tag) => <Pill href={`/tags/${tag}/`}>{tag}</Pill>)}
+              </div>
+              <p class="description">
+                <span class="meta">
+                  <time datetime={date.toISOString()}>{formatDate(date)}</time> · {readingTime} min read
+                </span>
+                <br />
+                {excerpt}
+              </p>
+            </div>
+          </Hero>
         </div>
-      )}
-    </header>
+      </header>
+      <main class="wrapper stack gap-10">
+        {image && <img class="feature-image" src={image} alt="" loading="eager" />}
+        <div class="entry-content">
+          <slot />
+        </div>
+      </main>
+    </article>
 
-    {optimizedImagePath && (
-      <div class="max-w-4xl mx-auto mt-2 mb-10 feature-image" transition:name={`image-${slug}`}>
-        <img
-          src={optimizedImagePath}
-          alt={`Featured image for "${title}"`}
-          class="w-full h-full object-cover"
-          loading="eager"
-          decoding="async"
-          width="1200"
-          height="675"
-        />
-      </div>
-    )}
-
-    <div class="max-w-3xl mx-auto prose prose-xl">
-      <slot />
-    </div>
-
-    <div class="max-w-3xl mx-auto">
-      <PostNavigation prevPost={prevPost} nextPost={nextPost} />
-    </div>
-  </article>
+    {
+      (newer || older) && (
+        <nav class="wrapper post-nav" aria-label="More posts">
+          {newer && (
+            <a class="card post-card" href={newer.url}>
+              <span class="card-title">{newer.title}</span>
+              <span class="card-dates">← Newer</span>
+            </a>
+          )}
+          {older && (
+            <a class="card post-card older" href={older.url}>
+              <span class="card-title">{older.title}</span>
+              <span class="card-dates">Older →</span>
+            </a>
+          )}
+        </nav>
+      )
+    }
+  </div>
 </BaseLayout>
+
+<style>
+  .entry-header {
+    padding-bottom: 2.5rem;
+    border-bottom: var(--line);
+  }
+
+  .back-link {
+    display: none;
+    text-decoration: 1px solid underline transparent;
+    text-underline-offset: 0.25em;
+    transition: text-decoration-color var(--ui-transition);
+  }
+
+  .back-link:hover,
+  .back-link:focus {
+    text-decoration-color: currentColor;
+  }
+
+  .details {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+    gap: 1.5rem;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .description {
+    font-size: var(--text-lg);
+    max-width: 54ch;
+  }
+
+  .meta {
+    font-family: var(--font-label);
+    font-size: var(--text-sm);
+    color: var(--gray-400);
+  }
+
+  .feature-image {
+    width: 100%;
+    max-width: 68ch;
+    margin-inline: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    border: var(--line);
+  }
+
+  .post-nav {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .post-nav .post-card {
+    min-height: 0;
+  }
+
+  @media (min-width: 50em) {
+    .back-link {
+      display: block;
+      align-self: flex-start;
+    }
+
+    .details {
+      flex-direction: row;
+      gap: 2.5rem;
+    }
+
+    .post-nav {
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+    }
+
+    .post-nav .older {
+      grid-column: 2;
+    }
+  }
+</style>

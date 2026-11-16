@@ -1,0 +1,435 @@
+/* Art Deco skin: black and champagne gold, a sunburst behind the hero,
+   fan-scale wallpaper, gold double frames with stepped corners, Poiret One
+   capitals over IM Fell Double Pica text. A nod to Clair Obscur: Expedition
+   33: crimson petals drift down, and switching in is a "Gommage" that
+   dissolves the old page into petals. Light mode is cream and black.
+   Artwork in public/assets/skins/deco/. */
+
+@import "@fontsource/poiret-one/400.css";
+@import "@fontsource/im-fell-double-pica/400.css";
+@import "@fontsource/im-fell-double-pica/400-italic.css";
+@import "@fontsource/bebas-neue/400.css";
+@import "@fontsource/eb-garamond/400-italic.css";
+@import "@fontsource/eb-garamond/700.css";
+
+:root[data-skin="deco"] {
+	--gold: #9a7a3c;
+	--champagne: #b8924a;
+	--black: #0e0d0b;
+	--cream: #f1eadb;
+	--deco-line: rgba(154, 122, 60, 0.55);
+	--wallpaper: rgba(154, 122, 60, 0.09);
+	--panel: rgba(255, 252, 244, 0.6);
+	--frame: url(/assets/skins/deco/frame.svg) 30 / 16px stretch;
+	--step-corners: polygon(8px 0, calc(100% - 8px) 0, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px, 100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) 100%, 8px 100%, 8px calc(100% - 4px), 4px calc(100% - 4px), 4px calc(100% - 8px), 0 calc(100% - 8px), 0 8px, 4px 8px, 4px 4px, 8px 4px);
+
+	--gray-0: #070605;
+	--gray-50: #0b0a09;
+	--gray-100: var(--black);
+	--gray-200: #24211d;
+	--gray-300: #45403a;
+	--gray-400: #5e5850;
+	--gray-500: #827b70;
+	--gray-600: #a59e92;
+	--gray-700: #c8c0b2;
+	--gray-800: var(--deco-line);
+	--gray-900: #e4dccb;
+	--gray-999-basis: 41, 45%, 90%;
+	--gray-999: var(--cream);
+
+	--accent-light: var(--champagne);
+	--accent-regular: var(--gold);
+	--accent-dark: var(--gold);
+	--accent-overlay: var(--deco-line);
+	--accent-subtle-overlay: rgba(154, 122, 60, 0.1);
+	--accent-text-over: var(--black);
+	--link-color: var(--gold);
+	--gradient-stop-1: #d9bd7e;
+	--gradient-stop-2: var(--gold);
+	--gradient-stop-3: #6e5424;
+
+	--shadow-sm: none;
+	--shadow-md: none;
+	--shadow-lg: 0 0 30px rgba(184, 146, 74, 0.25);
+
+	--radius-xs: 0;
+	--radius-sm: 0;
+	--radius-md: 0;
+	--radius-lg: 0;
+	--radius-xl: 0;
+	--radius-pill: 0;
+	--line: 1px solid var(--deco-line);
+
+	--surface: var(--black);
+	--surface-muted: var(--panel);
+	--label-bg: var(--black);
+	--label-fg: #e3c88f;
+	--badge-bg: var(--black);
+	--badge-fg: #e3c88f;
+	--pill-bg: transparent;
+	--pill-fg: var(--gray-200);
+	--pill-line: 1px solid var(--deco-line);
+	--cta-bg: transparent;
+	--cta-fg: var(--black);
+	--cta-hover-overlay: transparent;
+	--nav-bg: transparent;
+	--nav-ring: transparent;
+	--nav-hover-bg: transparent;
+	--nav-active-bg: transparent;
+	--nav-active-fg: var(--gold);
+
+	--font-body: 'IM Fell Double Pica', Georgia, serif;
+	--font-brand: 'Poiret One', 'Josefin Sans', var(--font-system);
+	--font-label: 'Poiret One', 'Josefin Sans', var(--font-system);
+	--font-number: 'Bebas Neue', 'Arial Narrow', sans-serif;
+	--font-dialogue: 'EB Garamond', Georgia, serif;
+	--heading-weight: 400;
+	--heading-case: uppercase;
+	--heading-tracking: 0.12em;
+	--ui-transition: 0.35s ease;
+}
+
+/* Night: black and gold, the Gatsby side. */
+:root[data-skin="deco"].theme-dark {
+	--gold: #c9a35a;
+	--champagne: #e3c88f;
+	--deco-line: rgba(201, 163, 90, 0.45);
+	--wallpaper: rgba(201, 163, 90, 0.07);
+	--panel: rgba(20, 18, 15, 0.75);
+
+	--gray-0: #fffaf0;
+	--gray-50: #f7f1e4;
+	--gray-100: #f1eadb;
+	--gray-200: #dcd4c4;
+	--gray-300: #b7ae9e;
+	--gray-400: #958c7d;
+	--gray-500: #736b5f;
+	--gray-600: #565047;
+	--gray-700: #3a3631;
+	--gray-900: #16140f;
+	--gray-999-basis: 40, 12%, 5%;
+	--gray-999: var(--black);
+
+	--cta-fg: var(--champagne);
+	--label-bg: rgba(14, 13, 11, 0.9);
+	--badge-bg: rgba(14, 13, 11, 0.9);
+}
+
+/* ---------- Page ---------- */
+
+/* A warm glow from the top, over fan-scale wallpaper in faint gold. */
+:root[data-skin="deco"] .backgrounds {
+	position: relative;
+	background:
+		radial-gradient(ellipse 60% 45% at 70% 0%, rgba(201, 163, 90, 0.16), transparent 70%),
+		var(--gray-999);
+	background-blend-mode: normal;
+}
+
+:root[data-skin="deco"] .backgrounds::before,
+:root[data-skin="deco"] .backgrounds::after {
+	content: '';
+	z-index: -1;
+	pointer-events: none;
+}
+
+:root[data-skin="deco"] .backgrounds::before {
+	position: absolute;
+	inset: 0;
+	background: var(--wallpaper);
+	mask: url(/assets/skins/deco/scales.svg) 0 0 / 40px 40px;
+}
+
+/* The Gommage's crimson petals drifting down. */
+:root[data-skin="deco"] .backgrounds::after {
+	position: fixed;
+	inset: 0;
+	background: url(/assets/skins/deco/petals.svg) 0 0 / 640px 640px;
+	opacity: 0.4;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	:root[data-skin="deco"] .backgrounds::after {
+		animation: deco-fall 60s linear infinite;
+	}
+}
+
+@keyframes deco-fall {
+	to {
+		background-position: -640px 1280px;
+	}
+}
+
+:root[data-skin="deco"] .with-background::before {
+	display: none;
+}
+
+:root[data-skin="deco"] body {
+	font-size: 1.12rem;
+}
+
+:root[data-skin="deco"] ::selection {
+	background: var(--gold);
+	color: var(--black);
+}
+
+/* ---------- The hero: a sunburst and a slim "33" ---------- */
+
+:root[data-skin="deco"] .home-hero {
+	position: relative;
+}
+
+:root[data-skin="deco"] .home-hero::before {
+	content: '';
+	position: absolute;
+	z-index: -1;
+	right: -12%;
+	bottom: 4%;
+	width: min(110vw, 1100px);
+	aspect-ratio: 200 / 102;
+	pointer-events: none;
+	background: var(--deco-line);
+	/* Rising behind the portrait, fading out before it reaches the text. */
+	mask:
+		url(/assets/skins/deco/fan.svg) center bottom / contain no-repeat,
+		linear-gradient(90deg, transparent 38%, #000 72%);
+	mask-composite: intersect;
+	opacity: 0.5;
+}
+
+/* On narrow screens the portrait sits below the text: keep the sun faint. */
+@media (max-width: 50em) {
+	:root[data-skin="deco"] .home-hero::before {
+		right: 50%;
+		transform: translateX(50%);
+		opacity: 0.25;
+	}
+}
+
+:root[data-skin="deco"] .home-hero::after {
+	content: '33';
+	position: absolute;
+	z-index: -1;
+	right: 0;
+	top: -3rem;
+	pointer-events: none;
+	font-family: var(--font-brand);
+	font-size: min(32vw, 24rem);
+	line-height: 1;
+	color: var(--deco-line);
+	opacity: 0.35;
+}
+
+:root[data-skin="deco"] .hero-title {
+	font-size: clamp(2.2rem, 5vw, 4.4rem);
+	line-height: 1.12;
+}
+
+/* ---------- Stepped deco dividers ---------- */
+
+:root[data-skin="deco"] .hero-title::after,
+:root[data-skin="deco"] .section-header h3::after,
+:root[data-skin="deco"] .contact-title::after,
+:root[data-skin="deco"] .about-title::after {
+	content: '';
+	display: block;
+	width: 15rem;
+	max-width: 100%;
+	height: 1rem;
+	margin-top: 0.9rem;
+	background: var(--gold);
+	mask: url(/assets/skins/deco/divider.svg) left center / contain no-repeat;
+}
+
+:root[data-skin="deco"] .section-header h3::after {
+	margin-inline: auto;
+	mask-position: center;
+}
+
+@media (min-width: 50em) {
+	:root[data-skin="deco"] .with-cta .section-header h3::after {
+		margin-inline: 0;
+		mask-position: left center;
+	}
+}
+
+/* ---------- Gold frames with stepped corners ---------- */
+
+:root[data-skin="deco"] .box,
+:root[data-skin="deco"] .education,
+:root[data-skin="deco"] .contact {
+	background: var(--panel);
+	border: 16px solid transparent;
+	border-image: var(--frame);
+}
+
+:root[data-skin="deco"] .education {
+	padding: 0.5rem 1rem;
+}
+
+:root[data-skin="deco"] .contact {
+	margin-inline: 1rem;
+}
+
+:root[data-skin="deco"] .portrait {
+	padding: 6px;
+	border: 16px solid transparent;
+	border-image: var(--frame);
+}
+
+:root[data-skin="deco"] .portrait img {
+	filter: saturate(0.75) contrast(1.05) sepia(0.12);
+}
+
+:root[data-skin="deco"] .card {
+	border: 1px solid var(--deco-line);
+	outline: 1px solid var(--deco-line);
+	outline-offset: 4px;
+}
+
+:root[data-skin="deco"] .card:hover,
+:root[data-skin="deco"] .card:focus-visible {
+	border-color: var(--champagne);
+	outline-color: var(--champagne);
+	box-shadow: var(--shadow-lg);
+}
+
+:root[data-skin="deco"] .card img {
+	filter: saturate(0.8) sepia(0.1);
+}
+
+:root[data-skin="deco"] .card:hover img,
+:root[data-skin="deco"] .card:focus-visible img {
+	filter: none;
+}
+
+:root[data-skin="deco"] .card-title {
+	font-family: var(--font-brand);
+	letter-spacing: 0.1em;
+	border-bottom: 1px solid var(--gold);
+}
+
+/* Numbers in Bebas Neue, like the game's counters. */
+:root[data-skin="deco"] .card-dates,
+:root[data-skin="deco"] .card-count {
+	font-family: var(--font-number);
+	font-size: 1rem;
+	letter-spacing: 0.08em;
+}
+
+/* ---------- Nav, pills, buttons ---------- */
+
+:root[data-skin="deco"] .link,
+:root[data-skin="deco"] .pill,
+:root[data-skin="deco"] .cta,
+:root[data-skin="deco"] .skin-option {
+	font-weight: 400;
+	text-transform: uppercase;
+	letter-spacing: 0.14em;
+}
+
+/* Poiret One is a hairline face: keep small labels large enough to read. */
+:root[data-skin="deco"] .pill {
+	font-size: var(--text-base);
+	color: var(--gray-100);
+}
+
+@media (min-width: 50em) {
+	:root[data-skin="deco"] .nav-items {
+		font-size: var(--text-md);
+	}
+}
+
+:root[data-skin="deco"] .link {
+	color: var(--gray-100);
+}
+
+:root[data-skin="deco"] .link.active {
+	box-shadow: inset 0 -1px 0 var(--gold), inset 0 -4px 0 var(--gray-999), inset 0 -5px 0 var(--gold);
+}
+
+:root[data-skin="deco"] .link:hover,
+:root[data-skin="deco"] .link:focus {
+	color: var(--gold);
+}
+
+/* Buttons: gold-outlined plaques with stepped corners. */
+:root[data-skin="deco"] .cta {
+	clip-path: var(--step-corners);
+	box-shadow: inset 0 0 0 1px var(--gold), inset 0 0 0 4px var(--gray-999), inset 0 0 0 5px var(--deco-line);
+	background: var(--gray-999);
+}
+
+:root[data-skin="deco"] .cta:hover,
+:root[data-skin="deco"] .cta:focus-visible {
+	color: var(--black);
+	background: var(--champagne);
+	box-shadow: inset 0 0 0 4px var(--champagne), inset 0 0 0 5px var(--black);
+}
+
+:root[data-skin="deco"] .badge {
+	color: var(--gold);
+}
+
+:root[data-skin="deco"] .badge svg {
+	fill: currentColor;
+	stroke: currentColor;
+}
+
+:root[data-skin="deco"] .entry-content blockquote {
+	font-family: var(--font-dialogue);
+	font-style: italic;
+	text-transform: none;
+	border-inline-start-color: var(--gold);
+}
+
+/* ---------- Switching in: the Gommage ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+	/* The old page sits on top and dissolves away. */
+	:root[data-skin="deco"][data-skin-switching]::view-transition-old(root) {
+		z-index: 1;
+		animation: deco-gommage 1.3s ease-in forwards;
+	}
+	:root[data-skin="deco"][data-skin-switching]::view-transition-new(root) {
+		animation: none;
+	}
+}
+
+@keyframes deco-gommage {
+	50% {
+		opacity: 0.7;
+		filter: grayscale(1);
+	}
+	to {
+		opacity: 0;
+		filter: grayscale(1) blur(12px) brightness(1.4);
+		transform: translateY(-50px) scale(1.04);
+	}
+}
+
+/* A storm of red petals rising across the screen. */
+:root[data-skin="deco"] .skin-intro {
+	width: 100vw;
+	height: 100vh;
+	color: transparent;
+	background:
+		url(/assets/skins/deco/petals.svg) 0 0 / 320px 320px,
+		url(/assets/skins/deco/petals.svg) 90px 140px / 210px 210px,
+		url(/assets/skins/deco/petals.svg) 40px 60px / 140px 140px;
+	animation: deco-storm 1.7s ease-out forwards;
+}
+
+@keyframes deco-storm {
+	0% {
+		opacity: 0;
+		transform: translate(-50%, -30%);
+	}
+	25% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+		transform: translate(-50%, -85%);
+	}
+}

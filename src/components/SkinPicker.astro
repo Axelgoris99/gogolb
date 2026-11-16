@@ -1,0 +1,329 @@
+---
+import { skins } from "../skins";
+---
+
+<skin-picker>
+  <div class="skin-controls">
+    <button class="skin-button skin-random" title="Random style">
+      <span class="sr-only">Random style</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          class="palette"
+          d="M12 3a9 9 0 0 0 0 18c1.1 0 1.8-.8 1.8-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.8-1.7 1.7-1.7H16a5 5 0 0 0 5-5c0-4-4-7.2-9-7.2z"
+        ></path>
+        <circle cx="7.5" cy="11.5" r="1.4"></circle>
+        <circle cx="10" cy="7.5" r="1.4"></circle>
+        <circle cx="14.5" cy="7.5" r="1.4"></circle>
+        <circle cx="17" cy="11" r="1.4"></circle>
+      </svg>
+    </button>
+    <button
+      class="skin-button skin-more"
+      popovertarget="skin-menu"
+      aria-haspopup="true"
+      aria-expanded="false"
+      title="Choose a style"
+    >
+      <span class="sr-only">Choose a style</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path class="chevron" d="M6 9l6 6 6-6"></path>
+      </svg>
+    </button>
+  </div>
+  <div id="skin-menu" class="skin-menu" popover>
+    <ul>
+      {
+        skins.map(({ id, label, intro, swatch: [a, b, c] }) => (
+          <li>
+            <button
+              class="skin-option"
+              data-skin-id={id}
+              data-intro={intro}
+            >
+              <span class="swatch" style={`--a: ${a}; --b: ${b}; --c: ${c}`} />
+              <span class="skin-label">{label}</span>
+            </button>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</skin-picker>
+
+<style>
+  /* Two buttons: the palette picks a random skin, the chevron opens the list. */
+  .skin-controls {
+    display: flex;
+    gap: 0.2rem;
+  }
+
+  .skin-button {
+    display: flex;
+    padding: 0.5rem;
+    border: 0;
+    border-radius: var(--radius-pill);
+    color: var(--accent-regular);
+    background-color: var(--gray-999);
+    box-shadow: inset 0 0 0 1px var(--accent-overlay);
+    cursor: pointer;
+    transition:
+      color var(--ui-transition),
+      background-color var(--ui-transition);
+  }
+
+  .skin-button:hover,
+  .skin-button:focus-visible {
+    color: var(--accent-text-over);
+    background-color: var(--accent-regular);
+  }
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+    fill: currentColor;
+  }
+
+  .skin-more {
+    padding-inline: 0.3rem;
+  }
+
+  .skin-more svg {
+    width: 0.8rem;
+    height: 0.8rem;
+  }
+
+  .palette,
+  .chevron {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+  }
+
+  .chevron {
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform var(--ui-transition);
+  }
+
+  .chevron {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .skin-more[aria-expanded="true"] .chevron {
+    transform: rotate(180deg);
+  }
+
+  /* Popovers default to the centre of the viewport; JS anchors it to the button. */
+  .skin-menu {
+    position: fixed;
+    inset: auto;
+    margin: 0;
+    padding: 0.5rem;
+    width: min(20rem, calc(100vw - 1rem));
+    color: var(--gray-200);
+    background: var(--gray-999);
+    border: var(--line);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* A grid of tiles, each with a three-colour swatch of its skin. */
+  ul {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .skin-option {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    width: 100%;
+    padding: 0.45rem 0.6rem;
+    border: 0;
+    border-radius: var(--radius-xs);
+    font: inherit;
+    font-family: var(--font-label);
+    text-align: start;
+    color: inherit;
+    background: none;
+    cursor: pointer;
+  }
+
+  /* Long labels (or wide letter-spacing in some skins) truncate rather than
+     making the menu scroll. */
+  .skin-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .swatch {
+    flex: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 50%;
+    background: conic-gradient(var(--a) 0 50%, var(--b) 0 75%, var(--c) 0);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25);
+  }
+
+  .skin-option:hover,
+  .skin-option:focus-visible {
+    background: var(--nav-hover-bg);
+  }
+
+  .skin-option[aria-pressed="true"] {
+    color: var(--nav-active-fg);
+    background: var(--nav-active-bg);
+  }
+</style>
+
+<script>
+  class SkinPicker extends HTMLElement {
+    constructor() {
+      super();
+
+      const root = document.documentElement;
+      const controls = this.querySelector<HTMLElement>(".skin-controls")!;
+      const random = this.querySelector<HTMLButtonElement>(".skin-random")!;
+      const more = this.querySelector<HTMLButtonElement>(".skin-more")!;
+      const menu = this.querySelector<HTMLElement>(".skin-menu")!;
+      const options = [...this.querySelectorAll<HTMLButtonElement>(".skin-option")];
+
+      const sync = () => {
+        const current = options.find((o) => o.dataset.skinId === root.dataset.skin);
+        for (const option of options) {
+          option.setAttribute("aria-pressed", String(option === current));
+        }
+      };
+
+      const apply = (id: string) => {
+        root.dataset.skin = id;
+        try {
+          localStorage.setItem("skin", id);
+        } catch {}
+        sync();
+      };
+
+      const switchTo = (option: HTMLButtonElement) => {
+        const id = option.dataset.skinId!;
+        if (id === root.dataset.skin) return;
+
+        const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (!document.startViewTransition || reduced) return apply(id);
+
+        // The new skin is revealed from the picker (see global.css).
+        const rect = random.getBoundingClientRect();
+        root.style.setProperty("--switch-x", `${rect.left + rect.width / 2}px`);
+        root.style.setProperty("--switch-y", `${rect.top + rect.height / 2}px`);
+        root.dataset.skinSwitching = "";
+
+        const transition = document.startViewTransition(() => {
+          apply(id);
+          const text = option.dataset.intro;
+          if (!text) return;
+          const intro = document.createElement("div");
+          intro.className = "skin-intro";
+          intro.textContent = text;
+          intro.setAttribute("aria-hidden", "true");
+          const remove = () => intro.remove();
+          intro.addEventListener("animationend", remove);
+          setTimeout(remove, 2000);
+          document.body.append(intro);
+        });
+        // Rejects when the browser skips the animation; the skin still applies.
+        transition.ready.catch(() => {});
+        transition.finished.finally(() => delete root.dataset.skinSwitching);
+      };
+
+      // Popovers default to the viewport centre: anchor the list under the
+      // buttons, right-aligned with them but never past the screen's edges.
+      const place = () => {
+        const rect = controls.getBoundingClientRect();
+        const width = menu.offsetWidth || Math.min(320, innerWidth - 16);
+        const right = Math.min(innerWidth - rect.right, innerWidth - width - 8);
+        menu.style.top = `${rect.bottom + 8}px`;
+        menu.style.right = `${Math.max(8, right)}px`;
+      };
+      menu.addEventListener("beforetoggle", (e) => {
+        if ((e as ToggleEvent).newState === "open") place();
+      });
+      menu.addEventListener("toggle", (e) => {
+        const isOpen = (e as ToggleEvent).newState === "open";
+        if (isOpen) place();
+        more.setAttribute("aria-expanded", String(isOpen));
+      });
+
+      // Opened by hovering (closes on leave) or pinned by clicking the chevron.
+      let hoverOpened = false;
+      const open = () => {
+        if (menu.matches(":popover-open")) return;
+        hoverOpened = true;
+        menu.showPopover();
+      };
+      const close = () => menu.hidePopover();
+
+      more.addEventListener("click", (e) => {
+        // Already open from hovering: pin it instead of toggling it shut.
+        if (hoverOpened && menu.matches(":popover-open")) e.preventDefault();
+        hoverOpened = false;
+      });
+
+      // The palette picks a random other skin; the chevron (popovertarget) opens the list.
+      random.addEventListener("click", () => {
+        close();
+        const others = options.filter((o) => o.dataset.skinId !== root.dataset.skin);
+        switchTo(others[Math.floor(Math.random() * others.length)]);
+      });
+
+      // With a mouse, hovering the buttons or the list also opens it.
+      let closeTimer: ReturnType<typeof setTimeout> | undefined;
+      for (const el of [controls, menu]) {
+        el.addEventListener("pointerenter", (e) => {
+          if (e.pointerType !== "mouse") return;
+          clearTimeout(closeTimer);
+          open();
+        });
+        el.addEventListener("pointerleave", (e) => {
+          if (e.pointerType !== "mouse" || !hoverOpened) return;
+          closeTimer = setTimeout(close, 250);
+        });
+      }
+
+      // Keyboard: arrow down opens the list and focuses the current skin.
+      controls.addEventListener("keydown", (e) => {
+        if (e.key !== "ArrowDown") return;
+        e.preventDefault();
+        open();
+        (options.find((o) => o.getAttribute("aria-pressed") === "true") ?? options[0]).focus();
+      });
+      menu.addEventListener("keydown", (e) => {
+        const i = options.indexOf(document.activeElement as HTMLButtonElement);
+        const steps: Record<string, number> = { ArrowRight: 1, ArrowLeft: -1, ArrowDown: 2, ArrowUp: -2 };
+        if (e.key in steps) {
+          e.preventDefault();
+          const step = steps[e.key];
+          options[(i + step + options.length) % options.length].focus();
+        } else if (e.key === "Escape") {
+          more.focus();
+        }
+      });
+
+      for (const option of options) {
+        option.addEventListener("click", () => {
+          close();
+          switchTo(option);
+        });
+      }
+
+      sync();
+    }
+  }
+  customElements.define("skin-picker", SkinPicker);
+</script>
