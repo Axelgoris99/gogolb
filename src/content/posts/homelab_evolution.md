@@ -41,3 +41,6 @@ And so on and so forth...Welcome to the self-hosting journey my friend!
 
 I present to you, your new best friend:
 https://community-scripts.org/
+
+
+Axel
