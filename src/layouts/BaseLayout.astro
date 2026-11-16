@@ -2,7 +2,6 @@
 import "../styles/global.css";
 import { ClientRouter } from "astro:transitions";
 import DarkModeToggle from "../components/ui/DarkModeToggle.astro";
-import Analytics from "@vercel/analytics/astro";
 
 interface Props {
   title: string;
@@ -12,21 +11,23 @@ interface Props {
   publishedDate?: Date;
   modifiedDate?: Date;
   author?: string;
+  noindex?: boolean;
 }
 
 const {
   title,
-  description = "A minimalist blog template focusing on clean typography and distraction-free reading experience.",
+  description = "Homelab and self-hosting notes by Axel Goris: Proxmox, NixOS, WireGuard, and the bugs I hit along the way.",
   image = "/og-image.png",
   type = "website",
   publishedDate,
   modifiedDate,
-  author = "GoGolb Team",
+  author = "Axel Goris",
+  noindex = false,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = image.startsWith("/") ? new URL(image, Astro.site) : image;
-const siteName = "GoGolb Blog";
+const siteName = "GoGolb";
 
 // Strukturierte Daten (JSON-LD) für bessere SEO
 const jsonLDWebsite = {
@@ -46,14 +47,12 @@ const jsonLDArticle = publishedDate
       author: {
         "@type": "Person",
         name: author,
+        url: "https://goris.live",
       },
       publisher: {
-        "@type": "Organization",
-        name: siteName,
-        logo: {
-          "@type": "ImageObject",
-          url: new URL("/favicon.svg", Astro.site).toString(),
-        },
+        "@type": "Person",
+        name: author,
+        url: "https://goris.live",
       },
       datePublished: publishedDate.toISOString(),
       dateModified: modifiedDate
@@ -76,6 +75,9 @@ const jsonLD =
     <title>{title} | GoGolb</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="alternate" type="application/rss+xml" title={siteName} href="/rss.xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
 
     <!-- Aktivieren der View Transitions -->
     <ClientRouter />
@@ -259,8 +261,6 @@ const jsonLD =
           <div class="text-sm text-gray-500 dark:text-gray-500">
             Made by <a
               href="/about"
-              target="_blank"
-              rel="noopener noreferrer"
               class="hover:text-gray-900 dark:hover:text-gray-100"
               >Axel Goris</a
             > - Template by <a
@@ -354,6 +354,5 @@ const jsonLD =
         initThemeToggle();
       });
     </script>
-    <Analytics />
   </body>
 </html>

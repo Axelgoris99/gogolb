@@ -1,23 +1,19 @@
 import rss from '@astrojs/rss';
-import { getCollection } from 'astro:content';
+import { getPublishedPosts } from '../utils/posts';
 
 export async function GET(context) {
-  const posts = await getCollection('posts');
-  
-  // Sort posts by date (most recent first)
-  const sortedPosts = posts.sort((a, b) => 
-    new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf()
-  );
-  
+  const sortedPosts = await getPublishedPosts();
+
   return rss({
-    title: 'Brook Blog',
-    description: 'A minimalist blog template focusing on clean typography and distraction-free reading experience',
+    title: 'GoGolb',
+    description: 'Homelab and self-hosting notes by Axel Goris: Proxmox, NixOS, WireGuard, and the bugs I hit along the way.',
     site: context.site,
     items: sortedPosts.map((post) => ({
       title: post.data.title,
       pubDate: post.data.date,
       description: post.data.excerpt,
       link: `/posts/${post.id}/`,
+      categories: post.data.tags,
     })),
     customData: `<language>en-us</language>`,
   });
